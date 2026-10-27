@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+@theme {
+  --color-fundo: #13131c;
+  --color-painel: #1d1d2b;
+  --color-superficie: #2a2a3a;
+  --color-borda: #34344a;
+  --color-primaria: #4d83f4;
+  --color-primaria-forte: #3a6fe0;
+  --color-roxo: #a855f7;
+  --color-texto: #e5e7eb;
+  --color-suave: #9ca3af;
+  --color-perigo: #f05252;
+  --color-sucesso: #31c48d;
+  --color-alerta: #f6ad3b;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-fundo);
+  color: var(--color-texto);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Componentes reaproveitáveis (no Tailwind v4, @utility permite @apply entre eles) */
+@utility campo {
+  @apply flex items-center gap-3 rounded-xl border border-borda bg-painel px-4 h-12 text-sm text-texto transition;
+  &:focus-within {
+    border-color: var(--color-primaria);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primaria) 25%, transparent);
+  }
+  & input,
+  & select {
+    @apply h-full w-full bg-transparent outline-none placeholder:text-suave;
+  }
+}
+@utility rotulo {
+  @apply mb-1.5 block text-xs font-medium text-suave;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 h-11 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60;
+}
+@utility btn-primario {
+  @apply btn bg-primaria text-white hover:bg-primaria-forte;
+}
+@utility btn-secundario {
+  @apply btn border border-borda bg-transparent text-texto hover:bg-superficie;
+}
+@utility btn-perigo {
+  @apply btn bg-perigo/15 text-perigo hover:bg-perigo/25;
+}
+@utility cartao {
+  @apply rounded-2xl border border-borda/70 bg-painel;
+}
+@utility link {
+  @apply text-primaria underline-offset-4 hover:underline;
+}
+
+/* ---------------- Refinamentos ---------------- */
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background:
+    radial-gradient(60rem 40rem at 85% -10%, rgb(77 131 244 / 0.07), transparent 60%),
+    radial-gradient(50rem 35rem at -10% 110%, rgb(168 85 247 / 0.06), transparent 60%),
+    var(--color-fundo);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: rgb(77 131 244 / 0.35);
+  color: #fff;
+}
+
+/* Foco visível só no teclado, igual em todo o portal */
+:focus-visible {
+  outline: 2px solid var(--color-primaria);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* Barra de rolagem discreta */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-borda) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-borda);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-suave);
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.015em;
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+/* Entrada suave do conteúdo das páginas */
+@keyframes entrada {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@utility animar-entrada {
+  animation: entrada 0.35s ease-out both;
+}
+
+/* Esqueleto de carregamento */
+@keyframes brilho {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+@utility esqueleto {
+  border-radius: 12px;
+  background: linear-gradient(90deg, var(--color-painel) 0%, var(--color-superficie) 50%, var(--color-painel) 100%);
+  background-size: 200% 100%;
+  animation: brilho 1.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
